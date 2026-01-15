@@ -5,7 +5,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 
 from database.repository.main_repository import Repository
-from states.create_client import CreateClientState
+from bot.states.create_client import CreateClientState
 
 router = Router()
 

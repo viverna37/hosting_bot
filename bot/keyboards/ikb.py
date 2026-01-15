@@ -1,4 +1,4 @@
-from aiogram.types import InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardMarkup, ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
@@ -17,6 +17,25 @@ class IKB:
 
             return builder.as_markup()
 
+        @staticmethod
+        def get_contact_keyboard() -> ReplyKeyboardMarkup:
+            return ReplyKeyboardMarkup(
+                keyboard=[
+                    [KeyboardButton(text="📱 Отправить мой контакт", request_contact=True)]
+                ],
+                resize_keyboard=True,
+                one_time_keyboard=True
+            )
+
+        @staticmethod
+        def payment_link(payment_link: str):
+            builder = InlineKeyboardBuilder()
+
+            builder.button(text="💸 Оплатить", url=payment_link)
+
+            builder.adjust(1)
+
+            return builder.as_markup()
 
     class Admin:
         @staticmethod

@@ -82,3 +82,10 @@ class SubscriptionRepository:
             select(Subscription).where(Subscription.status == "pending")
         )
         return result.scalars()
+
+    async def get_by_id(self, subscription_id: int) -> Subscription | None:
+        """Найти подписку по ID"""
+        result = await self.session.execute(
+            select(Subscription).where(Subscription.id == subscription_id)
+        )
+        return result.scalar_one_or_none()

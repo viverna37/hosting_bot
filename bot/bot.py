@@ -5,11 +5,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
+from api_client.api_clent import ApiClient
+from bot.middlewares.api_client import ApiMiddleware
 from config import load_config
-from database.db import db
-from handlers import routers
+from bot.handlers import routers
 from middlewares.config import ConfigMiddleware
-from middlewares.database import DatabaseMiddleware
 
 logging.basicConfig(
     level=logging.WARNING,
@@ -22,14 +22,13 @@ async def main():
     config = load_config()
     bot = Bot(token=config.tg_bot.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 
-    await db.init(config.db.url)
-    await db.create_tables()
-
     dp = Dispatcher()
     dp.include_routers(*routers)
+    api_client = ApiClient(base_url=config.api.base_url)
 
+    dp.message.middleware(ApiMiddleware(api_client))
+    dp.callback_query.middleware(ApiMiddleware(api_client))
     dp.update.middleware(ConfigMiddleware(config))
-    dp.update.middleware(DatabaseMiddleware())
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

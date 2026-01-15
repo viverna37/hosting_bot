@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, BigInteger, Text, Boolean, Float, Date, VARCHAR, column, \
-    ARRAY, ForeignKey
+from sqlalchemy import Column, Integer,  DateTime, BigInteger, Text,  Date,    ForeignKey
 from datetime import datetime
 
 from .db import Base
@@ -12,6 +11,7 @@ class Clients(Base):
     telegram_id = Column(BigInteger, unique=True)
     full_name = Column(Text)
     status = Column(Text, default="active")
+    phone_number = Column(Text, default=0)
 
     created_at = Column(DateTime, default=datetime.utcnow)
 
@@ -42,8 +42,16 @@ class Payment(Base):
     subscription_id = Column(Integer, ForeignKey("subscriptions.id"))
 
     payment_id = Column(Text)
+    payment_url = Column(Text)
 
     amount = Column(Integer)
     status = Column(Text, default="pending")  # pending / succeeded / canceled
 
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Admin(Base):
+    __tablename__ = "admins"
+
+    id = Column(Integer, primary_key=True)
+    telegram_id = Column(BigInteger, index=True)

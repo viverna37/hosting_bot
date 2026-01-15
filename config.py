@@ -23,11 +23,21 @@ class DbConfig:
             f"@{self.host}:{self.port}/{self.database}"
         )
 
+@dataclass
+class YooKassa:
+    account_id: int
+    secret_key: str
+
+@dataclass
+class Api:
+    base_url: str
 
 @dataclass
 class Config:
     tg_bot: TgBot
     db: DbConfig
+    yookassa: YooKassa
+    api: Api
 
 
 def load_config(path: str | None = None) -> Config:
@@ -45,5 +55,10 @@ def load_config(path: str | None = None) -> Config:
             user=env.str("DB_USER"),
             password=env.str("DB_PASSWORD"),
             database=env.str("DB_NAME"),
-        )
+        ),
+        yookassa=YooKassa(
+            account_id=int(env.str("ACCOUNT_ID")),
+            secret_key=env.str("SECRET_KEY")
+        ),
+        api=Api(base_url=env.str("API_URL"))
     )

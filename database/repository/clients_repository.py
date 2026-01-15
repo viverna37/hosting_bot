@@ -1,4 +1,4 @@
-from typing import Any
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,3 +61,18 @@ class ClientRepository:
             select(Clients)
         )
         return result.scalars()
+
+    async def update_phone_number(self, telegram_id: int, phone_number: str) -> Clients | None:
+        """Обновить номер телеона клиента"""
+        result = await self.session.execute(
+            select(Clients).where(Clients.telegram_id == telegram_id)
+        )
+        client = result.scalar_one_or_none()
+
+        if not client:
+            return None
+
+        client.phone_number = phone_number
+        await self.session.commit()
+        await self.session.refresh(client)
+        return client

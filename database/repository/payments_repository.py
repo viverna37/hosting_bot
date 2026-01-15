@@ -13,17 +13,19 @@ class PaymentRepository:
         self.session = session
 
     async def create(
-        self,
-        client_id: int,
-        subscription_id: int,
-        payment_id: str,
-        amount: int,
+            self,
+            client_id: int,
+            subscription_id: int,
+            payment_id: str,
+            payment_url: str,
+            amount: int,
     ) -> Payment:
         """Создать платёж"""
         payment = Payment(
             client_id=client_id,
             subscription_id=subscription_id,
             payment_id=payment_id,
+            payment_url=payment_url,
             amount=amount,
             status="pending",
         )
@@ -51,5 +53,17 @@ class PaymentRepository:
         """Получить платёж по ID платёжки"""
         result = await self.session.execute(
             select(Payment).where(Payment.payment_id == payment_id)
+        )
+        return result.scalar_one_or_none()
+
+    async def get_pending_by_subscription(
+            self,
+            subscription_id: int,
+    ) -> Payment | None:
+        result = await self.session.execute(
+            select(Payment).where(
+                Payment.subscription_id == subscription_id,
+                Payment.status == "pending",
+            )
         )
         return result.scalar_one_or_none()
