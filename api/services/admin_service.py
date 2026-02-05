@@ -1,5 +1,5 @@
 from datetime import date
-from exceptions import (
+from .exceptions import (
     ClientAlreadyExistsError,
     InvalidDueDateError,
     InvalidAmountError,

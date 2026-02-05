@@ -15,6 +15,7 @@ RUN python -m pip install --upgrade pip setuptools wheel \
 
 COPY api/ /app/api/
 COPY config/ /app/config/
+COPY database/ /app/database/
 
 EXPOSE 9000
 CMD ["python","-m","uvicorn","api.main:app","--host","0.0.0.0","--port","9000"]

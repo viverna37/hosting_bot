@@ -20,6 +20,7 @@ RUN python -m pip install --upgrade pip setuptools wheel \
 # потом код
 COPY bot/ ./bot/
 COPY config/ /app/config/
+COPY api_client/ /app/api_client/
 
 WORKDIR /app/bot
-CMD ["python", "bot.py"]
+CMD ["python", "-m", "bot.py"]

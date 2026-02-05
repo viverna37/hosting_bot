@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
-from config import load_config
+from config.config import load_config
 from database.db import db
 
 @asynccontextmanager

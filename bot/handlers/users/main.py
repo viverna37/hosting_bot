@@ -1,7 +1,7 @@
 from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 
-from api_client.api_clent import ApiClient
+from api_client.api_client import ApiClient
 from database.repository.main_repository import Repository
 from bot.keyboards.ikb import IKB
 from api.services.yookassa_client import create_subscription_payment
