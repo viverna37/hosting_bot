@@ -5,10 +5,21 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# build deps для пакетов, которые могут компилиться
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       gcc \
+       build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
+# сначала зависимости — для кеша
+COPY bot/requirements.txt /app/requirements.txt
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+# потом код
 COPY bot/ ./bot/
-RUN pip install --no-cache-dir -r requirements.txt
+COPY config/ /app/config/
 
-# если bot.py лежит прямо в bot/ и запускается так:
 WORKDIR /app/bot
 CMD ["python", "bot.py"]

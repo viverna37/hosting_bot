@@ -3,7 +3,7 @@ from typing import TypedDict
 
 from yookassa import Payment, Configuration
 
-from config import load_config
+from config.config import load_config
 
 config = load_config()
 Configuration.account_id = config.yookassa.account_id

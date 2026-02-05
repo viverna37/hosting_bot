@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 
 from api_client.api_clent import ApiClient
 from bot.middlewares.api_client import ApiMiddleware
-from config import load_config
+from config.config import load_config
 from bot.handlers import routers
 from middlewares.config import ConfigMiddleware
 
