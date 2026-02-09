@@ -4,7 +4,7 @@ from aiogram import F, Router
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 
-from database.repository.main_repository import Repository
+from api_client.api_client import ApiClient
 from bot.states.create_client import CreateClientState
 
 router = Router()
@@ -64,7 +64,7 @@ async def create_client_amount(message: Message, state: FSMContext):
 async def create_client_finish(
         message: Message,
         state: FSMContext,
-        repository: Repository,
+        api: ApiClient
 ):
     try:
         due_date = datetime.strptime(message.text, "%Y-%m-%d")
@@ -74,25 +74,22 @@ async def create_client_finish(
 
     data = await state.get_data()
 
-    # 1️⃣Создаём клиента
-    client = await repository.clients_repo.create(
+    resp = await api.admin_new_user(
+        name=data["full_name"],
         telegram_id=data["telegram_id"],
-        full_name=data["full_name"],
-    )
-
-    # 2️⃣ создаём подписку
-    subscription = await repository.subscriptions_repo.create(
-        client_id=client.id,
         amount=data["amount"],
-        due_date=due_date,
+        due_date=due_date
     )
 
-    await state.clear()
-
-    await message.answer(
+    if resp.get("message"):
+        await message.answer(resp.get("message"))
+    else:
+        await message.answer(f'{resp}')
+        await message.answer(
         "✅ <b>Клиент успешно добавлен</b>\n\n"
-        f"👤 {client.full_name}\n"
-        f"🆔 {client.telegram_id}\n"
-        f"💰 {subscription.amount} ₽\n"
-        f"📅 {subscription.due_date.strftime('%d.%m.%Y')}"
+        f"👤 {data['full_name']}\n"
+        f"🆔 {data['telegram_id']}\n"
+        f"💰 {data['amount']} ₽\n"
+        f"📅 {due_date}"
     )
+    await state.clear()

@@ -2,7 +2,6 @@ from aiogram import F, Router
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 
 from api_client.api_client import ApiClient
-from database.repository.main_repository import Repository
 from bot.keyboards.ikb import IKB
 from api.services.yookassa_client import create_subscription_payment
 
@@ -79,8 +78,7 @@ async def contact_handler(message: Message, api: ApiClient):
 
 @router.callback_query(F.data.startswith("pay_"))
 async def pay_subscription_handler(
-        callback: CallbackQuery,
-        repository: Repository
+        callback: CallbackQuery
 ):
     telegram_id = callback.from_user.id
     subscription_id = int(callback.data.split("_")[1])
